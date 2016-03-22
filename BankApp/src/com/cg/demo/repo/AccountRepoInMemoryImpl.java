@@ -2,8 +2,10 @@ package com.cg.demo.repo;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.cg.demo.beans.Account;
+import com.cg.demo.exceptions.InvalidAccountException;
 
 public class AccountRepoInMemoryImpl implements AccountRepo {
 
@@ -16,9 +18,20 @@ public class AccountRepoInMemoryImpl implements AccountRepo {
 	}
 
 	@Override
-	public Account findByNumber(int number) {
-		// TODO Auto-generated method stub
-		return null;
+	public Account findByNumber(int number) throws InvalidAccountException {
+		Set<Integer> allAccounts = accounts.keySet();
+		Account accountFound = null;
+		for (Integer nextAcc : allAccounts) {
+			if (nextAcc == number) {
+				accountFound = accounts.get(number);
+			}
+		}
+		
+		if (accountFound == null) {
+			throw new InvalidAccountException();
+		}
+		
+		return accountFound; 
 	}
 
 }

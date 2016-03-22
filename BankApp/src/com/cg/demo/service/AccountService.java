@@ -8,12 +8,12 @@ import com.cg.demo.exceptions.InvalidInitialAmountException;
 
 public interface AccountService {
 
-	public Account createAccount(Customer c, float amount) throws InvalidInitialAmountException;
+	public Account createAccount(Customer c, float amount) throws InvalidInitialAmountException, IllegalArgumentException;
 	
-	public double showBalance(int number) throws InvalidAccountException;
+	public double showBalance(int number) throws InvalidAccountException,IllegalArgumentException;
 	
-	public Account withdraw(int number, float amount) throws InvalidAccountException, InsufficientBalanceException;
+	public Account withdraw(int number, float amount) throws InvalidAccountException, InsufficientBalanceException, IllegalArgumentException;
 
-	Account deposit(int number, float amount) throws InvalidAccountException;
+	Account deposit(int number, float amount) throws InvalidAccountException, IllegalArgumentException;
 	
 }

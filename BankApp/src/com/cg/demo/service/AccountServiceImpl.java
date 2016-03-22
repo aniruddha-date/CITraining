@@ -12,6 +12,7 @@ public class AccountServiceImpl implements AccountService {
 	
 	private AccountRepo repo;
 
+	private final double minimumBalanceRequired = 500.00;
 	public AccountServiceImpl(AccountRepo repo) {
 		super();
 		this.repo = repo;
@@ -19,7 +20,7 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public Account createAccount(Customer c, float amount)
-			throws InvalidInitialAmountException {
+			throws InvalidInitialAmountException, IllegalArgumentException {
 		if(c== null){
 			throw new IllegalArgumentException("Customer cannot be null");
 		}
@@ -31,6 +32,7 @@ public class AccountServiceImpl implements AccountService {
 		if(amount <500){
 			throw new InvalidInitialAmountException();
 		}
+
 		Account a = new Account(AccountNumberGenerator.getNumber());
 		a.setBalance(amount);
 		a.setCustomer(c);
@@ -41,22 +43,58 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public double showBalance(int number) throws InvalidAccountException {
-		// TODO Auto-generated method stub
-		return 0;
+	public double showBalance(int number) throws InvalidAccountException, IllegalArgumentException {
+		if (number<=0) {
+			throw new IllegalArgumentException("Invalid argument for Account number");
+		}
+		Account acctFound = repo.findByNumber(number);
+		
+		return acctFound.getBalance();
 	}
 
 	@Override
 	public Account withdraw(int number, float amount)
-			throws InvalidAccountException, InsufficientBalanceException {
-		// TODO Auto-generated method stub
+			throws InvalidAccountException, InsufficientBalanceException, IllegalArgumentException {
+
+		if (number<=0) {
+			throw new IllegalArgumentException("Invalid argument for Account number");
+		}
+		if (amount <=0) {
+			throw new IllegalArgumentException("Invalid amount attempted to be withdrawn");
+		}
+		
+		Account acctFound = repo.findByNumber(number);
+
+		if (acctFound.getBalance() < amount) {
+			throw new InsufficientBalanceException();
+			
+		} else if (acctFound.getBalance() < (amount+minimumBalanceRequired)) {
+			throw new InsufficientBalanceException();		
+		}
+		acctFound.setBalance(acctFound.getBalance()-amount);
+		
+		if (repo.save(acctFound)) {
+			return acctFound; 
+		}
 		return null;
 	}
 
 	@Override
 	public Account deposit(int number, float amount)
-			throws InvalidAccountException {
-		// TODO Auto-generated method stub
+			throws InvalidAccountException, IllegalArgumentException {
+		if (number<=0) {
+			throw new IllegalArgumentException("Invalid argument for Account number");
+		}
+		if (amount <=0) {
+			throw new IllegalArgumentException("Invalid amount attempted to be withdrawn");
+		}
+		
+		Account acctFound = repo.findByNumber(number);
+		acctFound.setBalance(acctFound.getBalance()+amount);
+		
+		if (repo.save(acctFound)) {
+			return acctFound; 
+		}
 		return null;
 	}
 
