@@ -1,7 +1,9 @@
 package com.cg.demo.repo;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.cg.demo.beans.Account;
@@ -32,6 +34,11 @@ public class AccountRepoInMemoryImpl implements AccountRepo {
 		}
 		
 		return accountFound; 
+	}
+	
+	@Override
+	public Set<Entry<Integer, Account>> findAllAccounts(){
+		return accounts.entrySet();
 	}
 
 }
