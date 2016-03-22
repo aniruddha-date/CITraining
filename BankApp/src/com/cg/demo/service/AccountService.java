@@ -1,5 +1,9 @@
 package com.cg.demo.service;
 
+import java.util.List;
+import java.util.Set;
+import java.util.Map.Entry;
+
 import com.cg.demo.beans.Account;
 import com.cg.demo.beans.Customer;
 import com.cg.demo.exceptions.InsufficientBalanceException;
@@ -15,5 +19,7 @@ public interface AccountService {
 	public Account withdraw(int number, float amount) throws InvalidAccountException, InsufficientBalanceException;
 
 	Account deposit(int number, float amount) throws InvalidAccountException;
+	
+	public List<String> getAllAccountsDetails();
 	
 }
